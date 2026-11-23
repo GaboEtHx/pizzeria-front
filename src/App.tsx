@@ -4,6 +4,7 @@ import { ToastProvider } from './components/Toast';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout, type TabDef } from './components/Layout';
 import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
 import NuevaVentaPage from './pages/cajero/NuevaVentaPage';
 import VentasPage from './pages/VentasPage';
 import EstadisticasPage from './pages/EstadisticasPage';
@@ -82,7 +83,7 @@ const HOME_BY_ROLE: Record<string, string> = {
   admin: '/estadisticas',
 };
 
-/** Ruta raíz: si ya hay sesión, va directo al panel; si no, muestra la landing (con el login como sección). */
+/** Ruta raíz: si ya hay sesión, va directo al panel; si no, muestra la landing pública. */
 function RootRoute() {
   const { token, role } = useAppSelector((s) => s.auth);
   if (token) return <Navigate to={HOME_BY_ROLE[role || ''] || '/estadisticas'} replace />;
@@ -94,8 +95,7 @@ export default function App() {
     <ToastProvider>
       <Routes>
         <Route path="/" element={<RootRoute />} />
-        {/* Compatibilidad con el antiguo enlace /login: ahora el login vive en /#login */}
-        <Route path="/login" element={<Navigate to="/#login" replace />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/*" element={<Dashboard />} />
         </Route>

@@ -1,13 +1,11 @@
-import { useEffect, useState } from 'react';
-import { LoginForm } from '../components/LoginForm';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 /**
- * Landing pública de Pizzería Gabriel.
- *
- * Todo el contenido "de marca" (textos de Nosotros, menú, horarios, dirección,
- * fotos) está marcado con 📝 como placeholder — en cuanto Gabriel pase la
- * info real de su pizzería se reemplaza directo acá, sin tocar estructura
- * ni estilos.
+ * Landing pública de Pizzería Gabriel (Nuevo Chimbote).
+ * Contenido real tomado de la ficha de Google Maps y del material de marca
+ * que pasó Gabriel. El login vive aparte, en /login — esta página es solo
+ * presentación del negocio.
  */
 
 const NAV_LINKS = [
@@ -17,10 +15,10 @@ const NAV_LINKS = [
 ];
 
 const FEATURES = [
-  { icon: '🔥', title: 'Horno a leña', desc: 'Pizzas horneadas al estilo tradicional, con el sabor ahumado de siempre.' },
-  { icon: '🌿', title: 'Ingredientes frescos', desc: 'Seleccionamos insumos del día para que cada pizza salga perfecta.' },
-  { icon: '⚡', title: 'Entrega rápida', desc: 'Pedidos preparados y despachados en tiempo récord, calientitos.' },
-  { icon: '⭐', title: 'Hecho con cariño', desc: 'Más de una receta familiar, perfeccionada con los años.' },
+  { icon: '🍕', title: 'Masa casera original', desc: 'La misma receta de masa desde el 2005: crujiente, delgada y abundante.' },
+  { icon: '🍅', title: 'Salsa de tomates frescos', desc: 'Procesada a base de tomates frescos y naturales, sin atajos.' },
+  { icon: '👨‍🍳', title: 'Elaboración artesanal', desc: 'Ingredientes naturales, selectos y del día, preparados a mano.' },
+  { icon: '❤️', title: '17 años de pasión', desc: '"La pasión por lo que hacemos" — nuestro único secreto desde siempre.' },
 ];
 
 const MENU_CATEGORIAS = [
@@ -33,22 +31,18 @@ const MENU_CATEGORIAS = [
 ];
 
 const STATS = [
-  { value: '+500', label: 'pizzas servidas' },
-  { value: '4.9★', label: 'valoración promedio' },
-  { value: '15 min', label: 'tiempo de entrega' },
+  { value: '17 años', label: 'desde enero del 2005' },
+  { value: '86%', label: 'recomendado (7 opiniones)' },
+  { value: '$', label: 'precio accesible' },
 ];
+
+const DIRECCION = 'Urb. Las Casuarinas II Etapa Mz Q Lt 12, Nuevo Chimbote, Perú, 02710';
+const MAPS_URL =
+  'https://www.google.com.pe/maps/place/pizzeria+gabriel/data=!4m2!3m1!1s0x91ab85b201fe6635:0x9e7e4648abe45448?sa=X&ved=1t:242&ictx=111';
+const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${encodeURIComponent(DIRECCION)}&output=embed`;
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // Si llegamos con un #ancla (p. ej. redirigidos desde una ruta protegida
-  // hacia /#login), hacemos scroll suave a esa sección al montar.
-  useEffect(() => {
-    if (window.location.hash) {
-      const el = document.querySelector(window.location.hash);
-      if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
-    }
-  }, []);
 
   return (
     <div className="min-h-screen bg-white text-slate-800">
@@ -57,9 +51,7 @@ export default function LandingPage() {
         <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-amber-400 to-red-500" />
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <a href="#top" className="flex items-center gap-2.5 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 via-amber-400 to-red-500 shadow flex items-center justify-center text-lg">
-              🍕
-            </div>
+            <img src="/brand/logo-circular.png" alt="Pizzería Gabriel" className="w-9 h-9 rounded-full object-cover shadow" />
             <span className="font-black text-slate-800 tracking-tight">
               Pizzería <span className="text-blue-600">Gabriel</span>
             </span>
@@ -74,12 +66,12 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <a
-              href="#login"
+            <Link
+              to="/login"
               className="hidden sm:inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all shadow-sm hover:shadow"
             >
               Ingresar <span>→</span>
-            </a>
+            </Link>
             <button
               onClick={() => setMenuOpen((v) => !v)}
               className="md:hidden w-10 h-10 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600"
@@ -104,13 +96,13 @@ export default function LandingPage() {
                 {l.label}
               </a>
             ))}
-            <a
-              href="#login"
+            <Link
+              to="/login"
               onClick={() => setMenuOpen(false)}
               className="mt-1 text-center bg-blue-600 text-white text-sm font-bold px-4 py-2.5 rounded-xl"
             >
               Ingresar →
-            </a>
+            </Link>
           </div>
         )}
       </header>
@@ -124,17 +116,18 @@ export default function LandingPage() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-20 lg:pt-24 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
           <div className="fade-in">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-100 px-3 py-1.5 rounded-full mb-5">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" /> Sistema de pedidos y gestión
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" /> Desde el 2005 en Nuevo Chimbote
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-[1.05]">
-              La mejor pizza de la ciudad,{' '}
+              La pasión por{' '}
               <span className="bg-gradient-to-r from-blue-600 via-amber-500 to-red-600 bg-clip-text text-transparent">
-                recién salida del horno
+                lo que hacemos
               </span>
             </h1>
             <p className="mt-5 text-slate-500 text-base sm:text-lg leading-relaxed max-w-lg">
-              📝 Acá va una descripción corta y cálida de la pizzería: desde cuándo existen, qué las hace
-              diferentes, y por qué la gente vuelve. Cuéntame la historia real y la dejamos lista.
+              Desde los primeros días de enero del 2005, hemos sabido preservar la receta original y única de
+              nuestra masa casera: crujiente, delgada y abundante, acompañada de una salsa a base de tomates
+              frescos y naturales. Elaborada artesanalmente, con ingredientes selectos y del día.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
@@ -144,10 +137,12 @@ export default function LandingPage() {
                 Ver el menú 🍕
               </a>
               <a
-                href="#login"
+                href={MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 font-bold px-6 py-3.5 rounded-xl border border-slate-200 transition-all"
               >
-                Soy del equipo →
+                📍 Cómo llegar
               </a>
             </div>
 
@@ -155,45 +150,59 @@ export default function LandingPage() {
               {STATS.map((s) => (
                 <div key={s.label}>
                   <div className="text-2xl font-black text-slate-900">{s.value}</div>
-                  <div className="text-xs font-medium text-slate-400">{s.label} 📝</div>
+                  <div className="text-xs font-medium text-slate-400">{s.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="relative fade-in">
-            <div className="aspect-square max-w-md mx-auto rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-amber-400 to-red-500 p-1.5 shadow-2xl shadow-amber-900/20">
-              <div className="w-full h-full rounded-[2.2rem] bg-white flex items-center justify-center">
-                <span className="text-[10rem] leading-none select-none drop-shadow-sm">🍕</span>
+            <div className="aspect-square max-w-md mx-auto rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-amber-400 to-red-500 p-2 shadow-2xl shadow-amber-900/20">
+              <div className="w-full h-full rounded-[2.2rem] bg-black flex items-center justify-center overflow-hidden">
+                <img src="/brand/logo-wordmark.png" alt="Pizzería Gabriel" className="w-4/5 object-contain" />
               </div>
             </div>
             <div className="absolute -bottom-4 -left-4 bg-white rounded-2xl shadow-xl border border-slate-100 px-4 py-3 flex items-center gap-2.5">
-              <span className="text-2xl">🚴</span>
+              <span className="text-2xl">⭐</span>
               <div className="leading-tight">
-                <div className="text-sm font-black text-slate-800">Delivery express</div>
-                <div className="text-[11px] text-slate-400 font-medium">📝 zona de reparto</div>
+                <div className="text-sm font-black text-slate-800">86% recomendado</div>
+                <div className="text-[11px] text-slate-400 font-medium">7 opiniones en Google</div>
               </div>
             </div>
             <div className="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl border border-slate-100 px-4 py-3 flex items-center gap-2.5">
-              <span className="text-2xl">⭐</span>
+              <span className="text-2xl">🕒</span>
               <div className="leading-tight">
-                <div className="text-sm font-black text-slate-800">4.9 / 5.0</div>
-                <div className="text-[11px] text-slate-400 font-medium">📝 reseñas</div>
+                <div className="text-sm font-black text-slate-800">Abierto ahora</div>
+                <div className="text-[11px] text-slate-400 font-medium">según Google Maps</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Nosotros / features ──────────────────────────────── */}
+      {/* ── Nosotros ─────────────────────────────────────────── */}
       <section id="nosotros" className="py-20 bg-slate-50 scroll-mt-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-xl mx-auto mb-14">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Nosotros</span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">¿Por qué elegirnos?</h2>
-            <p className="mt-3 text-slate-500">
-              📝 Espacio para contar qué hace especial a tu pizzería — tradición, ingredientes, premios, años de barrio.
-            </p>
+          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Nosotros</span>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">17 años contigo</h2>
+              <p className="mt-4 text-slate-500 leading-relaxed">
+                Desde los primeros días de enero del 2005, año en que Gabriel Pizza llegó a Nuevo Chimbote, hemos
+                sabido preservar, durante todo ese tiempo, la receta original y única de nuestra masa casera.
+              </p>
+              <p className="mt-3 text-slate-500 leading-relaxed">
+                Con su textura crujiente, delgada, abundante y acompañada a la vez de una salsa procesada a base de
+                tomates frescos y naturales, hacen de nuestra pizza una delicia que nos enorgullece compartir con
+                ustedes. Elaborada artesanalmente, pizza Gabriel se prepara empleando ingredientes naturales,
+                selectos y del día, apelando a nuestro único secreto: <em>"la pasión por lo que hacemos"</em>.
+              </p>
+            </div>
+            <img
+              src="/brand/historia-17-anios.png"
+              alt="Gabriel, 17 años contigo"
+              className="rounded-2xl shadow-xl border border-slate-200/60 w-full"
+            />
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -220,8 +229,8 @@ export default function LandingPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-red-600">Nuestro menú</span>
             <h2 className="mt-2 text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">Algo para cada antojo</h2>
             <p className="mt-3 text-slate-500">
-              📝 Cuando me pases tus productos y precios reales, aquí va el catálogo completo con fotos.
-              Por ahora, estas son las categorías que ya tienes cargadas en el sistema:
+              📝 Cuando me pases tus productos y precios reales, aquí va el catálogo completo con fotos. Por
+              ahora, estas son las categorías que ya tienes cargadas en el sistema:
             </p>
           </div>
 
@@ -245,53 +254,47 @@ export default function LandingPage() {
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Visítanos</span>
             <h2 className="mt-2 text-3xl sm:text-4xl font-black tracking-tight">Te esperamos</h2>
-            <p className="mt-3 text-slate-400 max-w-md">
-              📝 Dirección, horario de atención y teléfono real van aquí apenas me los compartas.
-            </p>
+            <p className="mt-3 text-slate-400 max-w-md">86% de recomendación con 7 opiniones en Google Maps.</p>
 
             <div className="mt-8 space-y-4">
               <div className="flex items-start gap-3">
                 <span className="text-xl">📍</span>
-                <span className="text-slate-300 text-sm">📝 Av. Principal 123, tu distrito, tu ciudad</span>
+                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="text-slate-300 text-sm hover:text-white underline underline-offset-2">
+                  {DIRECCION}
+                </a>
               </div>
               <div className="flex items-start gap-3">
                 <span className="text-xl">🕒</span>
-                <span className="text-slate-300 text-sm">📝 Lun a Dom · 12:00 pm – 11:00 pm</span>
+                <span className="text-slate-300 text-sm">Abierto ahora · horario según Google Maps</span>
               </div>
               <div className="flex items-start gap-3">
-                <span className="text-xl">📞</span>
-                <span className="text-slate-300 text-sm">📝 (01) 234-5678 / WhatsApp</span>
+                <span className="text-xl">⭐</span>
+                <span className="text-slate-300 text-sm">86% recomendado por 7 opiniones</span>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-xl">💲</span>
+                <span className="text-slate-300 text-sm">Precio accesible ($)</span>
               </div>
             </div>
+
+            <a
+              href={MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 bg-white text-slate-900 font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-slate-100 transition-all"
+            >
+              Ver en Google Maps →
+            </a>
           </div>
 
-          <div className="aspect-video rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 text-sm font-medium">
-            📝 Mapa / ubicación próximamente
-          </div>
-        </div>
-      </section>
-
-      {/* ── Login ────────────────────────────────────────────── */}
-      <section id="login" className="relative py-20 overflow-hidden scroll-mt-16">
-        <div className="absolute -top-24 -left-24 w-80 h-80 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="order-2 lg:order-1 text-center lg:text-left">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600">Panel interno</span>
-            <h2 className="mt-2 text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">¿Eres del equipo?</h2>
-            <p className="mt-3 text-slate-500 max-w-md mx-auto lg:mx-0">
-              Ingresa con tu usuario para gestionar pedidos, ventas, gastos y el catálogo de la pizzería.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-2.5">
-              <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600">👑 Admin</span>
-              <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600">👔 Jefe</span>
-              <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600">🧑 Cajero</span>
-            </div>
-          </div>
-
-          <div className="order-1 lg:order-2 flex justify-center">
-            <LoginForm />
+          <div className="aspect-video rounded-2xl overflow-hidden border border-slate-700 shadow-xl">
+            <iframe
+              title="Ubicación Pizzería Gabriel"
+              src={MAPS_EMBED_URL}
+              className="w-full h-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </section>
@@ -300,13 +303,11 @@ export default function LandingPage() {
       <footer className="border-t border-slate-200 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-600 via-amber-400 to-red-500 flex items-center justify-center text-sm">
-              🍕
-            </div>
+            <img src="/brand/logo-circular.png" alt="Pizzería Gabriel" className="w-7 h-7 rounded-full object-cover" />
             <span className="text-sm font-bold text-slate-700">Pizzería Gabriel</span>
           </div>
           <span className="text-xs text-slate-400 font-medium">
-            © {new Date().getFullYear()} Pizzería Gabriel · Sistema de Gestión
+            © {new Date().getFullYear()} Pizzería Gabriel · Nuevo Chimbote
           </span>
         </div>
       </footer>
